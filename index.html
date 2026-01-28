@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentine?</title>
+  <style>
+    :root {
+      --bg1: #fff0f6;
+      --bg2: #ffe3ec;
+      --text: #2b2b2b;
+      --yes: #ff3b7a;
+      --no: #6b7280;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1) 60%);
+      overflow: hidden;
+    }
+
+    .card {
+      width: min(560px, 92vw);
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      text-align: center;
+      position: relative;
+      backdrop-filter: blur(8px);
+      margin-bottom: 200px;
+    }
+
+    .card img {
+        display: block;
+        width: 100%;          /* fill card width */
+        max-height: 340px;    /* keeps it from dominating the card */
+        object-fit: cover;    /* crops nicely instead of stretching */
+        border-radius: 16px;
+        margin: 12px 0 18px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0 0 22px;
+      opacity: 0.8;
+      font-size: 16px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+      user-select: none;
+    }
+
+    #yesBtn {
+      background: var(--yes);
+      color: white;
+      transform: scale(1);
+    }
+    #yesBtn:hover { transform: scale(calc(var(--yesScale, 1) * 1.03)); }
+
+    #noBtn {
+      background: var(--no);
+      color: white;
+      transform: scale(1);
+      opacity: 0.95;
+    }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 13px;
+      opacity: 0.55;
+    }
+
+    /* Success screen */
+    .hidden { display: none; }
+    .yay {
+      display: grid;
+      gap: 10px;
+      place-items: center;
+      padding: 10px 0 4px;
+    }
+    .yay h2 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 48px);
+    }
+    .yay .sub {
+      margin: 0;
+      opacity: 0.8;
+      font-size: 16px;
+    }
+
+    /* Fireworks (pure CSS) */
+    .fireworks {
+      position: absolute;
+      inset: -40px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .burst {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      left: var(--x);
+      top: var(--y);
+      transform: translate(-50%, -50%);
+      animation: pop 1.2s ease-out infinite;
+      opacity: 0.0;
+    }
+    .burst::before, .burst::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 59, 122, 0.65);
+      animation: ring 1.2s ease-out infinite;
+    }
+    .burst::after {
+      inset: -30px;
+      border-color: rgba(255, 187, 0, 0.5);
+      animation-delay: 120ms;
+    }
+
+    @keyframes pop {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.25); opacity: 0; }
+    }
+    @keyframes ring {
+      0% { transform: scale(0.2); opacity: 0.0; }
+      18% { opacity: 1; }
+      100% { transform: scale(1.0); opacity: 0; }
+    }
+
+    /* A little wiggle when No is clicked */
+    @keyframes wiggle {
+      0% { transform: translateX(0) scale(var(--noScale, 1)); }
+      25% { transform: translateX(-6px) scale(var(--noScale, 1)); }
+      50% { transform: translateX(6px) scale(var(--noScale, 1)); }
+      75% { transform: translateX(-4px) scale(var(--noScale, 1)); }
+      100% { transform: translateX(0) scale(var(--noScale, 1)); }
+    }
+    .wiggle { animation: wiggle 220ms ease-in-out; }
+
+/* Floating hearts background (behind the card) */
+.heart-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+}
+
+.heart {
+  position: absolute;
+  top: 110vh;            /* start below the viewport */
+  left: 0;
+  transform: translateX(-50%);
+  opacity: 0.22;
+  animation: floatUp linear infinite;
+  filter: blur(0.1px);
+  will-change: transform;
+}
+
+@keyframes floatUp {
+  from { transform: translate(-50%, 0); }
+  to   { transform: translate(-50%, -240vh); } /* go well past top */
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="card" id="card">
+    <div id="askScreen">
+      <h1>KK, Will you be my Valentine? 💘</h1>
+      <img src="assets/images/IMG_1494.JPEG" alt="MeAndKK">
+      <p>Be honest… but choose wisely 😄</p>
+
+      <div class="buttons">
+        <button id="yesBtn" type="button">Yes</button>
+        <button id="noBtn" type="button">No</button>
+      </div>
+
+      <div class="hint" id="hint"></div>
+    </div>
+
+    <div id="yayScreen" class="hidden">
+      <div class="yay">
+        <h2>YAY!! 🎆</h2>
+        <p class="sub">Best decision ever. I love you 💖</p>
+      </div>
+      <div class="fireworks hidden" id="fireworks"></div>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const hint = document.getElementById("hint");
+
+    const askScreen = document.getElementById("askScreen");
+    const yayScreen = document.getElementById("yayScreen");
+    const fireworks = document.getElementById("fireworks");
+
+    let noCount = 0;
+    let yesScale = 1.0;
+    let noScale = 1.0;
+
+    const hints = [
+      "hmmm 🤨",
+      "are you sure? 😅",
+      "think again…",
+      "last chance 😳"
+    ];
+
+    function applyScales() {
+      // Store scale in CSS variables so hover/wiggle plays nice
+      yesBtn.style.setProperty("--yesScale", yesScale.toFixed(3));
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      noBtn.style.setProperty("--noScale", noScale.toFixed(3));
+      noBtn.style.transform = `scale(${noScale})`;
+    }
+
+    noBtn.addEventListener("click", () => {
+      noCount++;
+
+      // Make Yes bigger each time, cap so it doesn’t get ridiculous
+      yesScale = Math.min(yesScale + 0.18, 2.6);
+
+      // Make No slightly smaller + a bit more transparent
+      noScale = Math.max(noScale - 0.06, 0.55);
+      noBtn.style.opacity = String(Math.max(0.5, 0.95 - noCount * 0.06));
+
+      hint.textContent = hints[Math.min(noCount - 1, hints.length - 1)];
+
+      // wiggle animation
+      noBtn.classList.remove("wiggle");
+      void noBtn.offsetWidth; // reflow trick to restart animation
+      noBtn.classList.add("wiggle");
+
+      applyScales();
+    });
+
+yesBtn.addEventListener("click", () => {
+  askScreen.classList.add("hidden");
+  yayScreen.classList.remove("hidden");
+  fireworks.classList.remove("hidden");
+
+  // Generate bursts
+  fireworks.innerHTML = "";
+  const bursts = 10;
+  for (let i = 0; i < bursts; i++) {
+    const b = document.createElement("div");
+    b.className = "burst";
+    b.style.setProperty("--x", `${10 + Math.random() * 80}%`);
+    b.style.setProperty("--y", `${10 + Math.random() * 70}%`);
+    b.style.animationDelay = `${Math.random() * 0.6}s`;
+    fireworks.appendChild(b);
+  }
+
+  // 🔥 remove fireworks after 2.5 seconds
+  setTimeout(() => {
+    fireworks.classList.add("hidden");
+    fireworks.innerHTML = "";
+  }, 2500);
+});
+
+// Subtle floating hearts in background (behind the card)
+const heartLayer = document.createElement("div");
+heartLayer.className = "heart-layer";
+document.body.appendChild(heartLayer);
+
+const heartEmojis = ["💗","💖","💘","💝","💕"];
+for (let i = 0; i < 18; i++) {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+
+  // true random horizontal start
+  h.style.left = `${Math.random() * 100}%`;
+
+  // independent durations/delays so they don't line up
+  h.style.animationDuration = `${10 + Math.random() * 14}s`;
+  h.style.animationDelay = `${Math.random() * 10}s`;
+
+  h.style.fontSize = `${14 + Math.random() * 18}px`;
+
+  heartLayer.appendChild(h);
+}
+
+    applyScales();
+  </script>
+</body>
+</html>
