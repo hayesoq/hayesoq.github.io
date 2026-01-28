@@ -82,9 +82,10 @@ button {
   color: white;
   transform: scale(1);
 
-  margin-top: calc(var(--yesMargin, 0px));
-  margin-bottom: calc(var(--yesMargin, 0px));
+  /* symmetric spacing so growth never overlaps */
+  margin: calc(var(--yesMargin, 0px));
 }
+
 #yesBtn:hover {
   transform: scale(calc(var(--yesScale, 1) * 1.03));
 }
@@ -94,6 +95,10 @@ button {
   color: white;
   transform: scale(1);
   opacity: 0.95;
+}
+
+#noBtn:hover {
+  transform: scale(calc(var(--yesScale, 1) * 1.03));
 }
 
 .hint {

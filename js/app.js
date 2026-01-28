@@ -21,8 +21,8 @@ function applyScales() {
   yesBtn.style.setProperty("--yesScale", yesScale.toFixed(3));
   yesBtn.style.transform = `scale(${yesScale})`;
 
-  // symmetric vertical spacing as Yes grows
-  const extraMargin = Math.max(0, (yesScale - 1) * 24);
+  // spacing grows proportionally with size
+  const extraMargin = Math.max(0, (yesScale - 1) * 22);
   yesBtn.style.setProperty("--yesMargin", `${extraMargin}px`);
 
   noBtn.style.setProperty("--noScale", noScale.toFixed(3));
