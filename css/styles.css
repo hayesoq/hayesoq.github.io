@@ -2,7 +2,7 @@
   --bg1: #fff0f6;
   --bg2: #ffe3ec;
   --text: #2b2b2b;
-  --yes: #ff3b7a;
+  --yes: #dd2e44;
   --no: #6b7280;
 }
 
@@ -81,6 +81,9 @@ button {
   background: var(--yes);
   color: white;
   transform: scale(1);
+
+  margin-top: calc(var(--yesMargin, 0px));
+  margin-bottom: calc(var(--yesMargin, 0px));
 }
 #yesBtn:hover {
   transform: scale(calc(var(--yesScale, 1) * 1.03));
@@ -146,7 +149,7 @@ button {
   position: absolute;
   inset: -18px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 59, 122, 0.65);
+  border: 2px solid #dd2e44;
   animation: ring 1.2s ease-out infinite;
 }
 
