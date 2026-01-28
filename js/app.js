@@ -14,15 +14,15 @@ let noCount = 0;
 let yesScale = 1.0;
 let noScale = 1.0;
 
-const hints = ["hmmm 🤨", "are you sure? 😅", "think again…", "last chance 😳"];
+const hints = ["hmmm 🤨", "are you sure? 😅", "babe...", "you're joking... 😭", "last chance 😳"];
 
 // Helpers
 function applyScales() {
   yesBtn.style.setProperty("--yesScale", yesScale.toFixed(3));
   yesBtn.style.transform = `scale(${yesScale})`;
 
-  // spacing grows proportionally with size
-  const extraMargin = Math.max(0, (yesScale - 1) * 22);
+  // symmetric vertical spacing as Yes grows
+  const extraMargin = Math.max(0, (yesScale - 1) * 24);
   yesBtn.style.setProperty("--yesMargin", `${extraMargin}px`);
 
   noBtn.style.setProperty("--noScale", noScale.toFixed(3));
@@ -54,7 +54,7 @@ function spawnFireworks(bursts = 10) {
   }, 2500);
 }
 
-function addFloatingHearts(count = 18) {
+function addFloatingHearts(count = 100) {
   const heartLayer = document.createElement("div");
   heartLayer.className = "heart-layer";
   document.body.appendChild(heartLayer);
@@ -101,5 +101,5 @@ yesBtn.addEventListener("click", () => {
 });
 
 // Init
-addFloatingHearts(18);
+addFloatingHearts(100);
 applyScales();
