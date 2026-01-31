@@ -115,6 +115,7 @@ button {
   gap: 10px;
   place-items: center;
   padding: 10px 0 4px;
+  margin-top: 50px;
 }
 
 .yay h2 {
