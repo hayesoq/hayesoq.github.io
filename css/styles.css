@@ -30,7 +30,7 @@ body {
   text-align: center;
   position: relative;
   backdrop-filter: blur(8px);
-  margin-bottom: 150px;
+  margin-bottom: 60px;
   z-index: 1; /* above hearts */
 }
 
