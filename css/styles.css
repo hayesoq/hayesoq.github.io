@@ -103,8 +103,8 @@ button {
 
 .hint {
   margin-top: 14px;
-  font-size: 13px;
-  opacity: 0.55;
+  font-size: 20px;
+  opacity: 1;
 }
 
 /* Success screen */
